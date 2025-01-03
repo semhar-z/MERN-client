@@ -1,7 +1,7 @@
-// // src/components/NavBar.jsx
+ // src/components/NavBar.jsx
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { getToken, removeToken } from '../utils/auth';
+import { useNavigate } from 'react-router-dom';
+import { removeToken } from '../utils/auth';
 
 const NavBar = ({ isAuthenticated, setIsAuthenticated }) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -80,8 +80,7 @@ const NavBar = ({ isAuthenticated, setIsAuthenticated }) => {
 const navBarStyles = {
     backgroundColor: '#7b1fa2',
     padding: '10px 0',
-    // marginBottom: 'px',
-};
+   };
 
 const navListStyles = {
     listStyleType: 'none',
@@ -90,6 +89,7 @@ const navListStyles = {
     margin: '0',
     padding: '0',
 };
+
 
 const navItemStyles = {
     margin: '0 15px',

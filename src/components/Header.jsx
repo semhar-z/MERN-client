@@ -1,5 +1,4 @@
-// // src/components/Header.jsx
-
+ // src/components/Header.jsx
 import React from "react";
 
 const Header = () => {
@@ -15,7 +14,7 @@ const Header = () => {
 };
 
 const headerStyles = {
-  backgroundColor: "#6a0dad", // Purple background
+  backgroundColor: "#6a0dad", 
   color: "white",
   padding: "10px 20px",
   display: "flex",
