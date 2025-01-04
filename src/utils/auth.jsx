@@ -1,4 +1,3 @@
-// src/utils/auth.jsx
 export const storeToken = (token) => {
     if (typeof token !== "string") {
       console.error("Expected a string token but received:", token);

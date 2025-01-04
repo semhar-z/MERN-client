@@ -1,4 +1,3 @@
-// components/Login.jsx
 import { useState } from 'react';
 import { loginUser } from '../services/api'; // Import login function
 import { storeToken } from '../utils/auth'; // Import token storage function

@@ -1,4 +1,3 @@
-// components/profile.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile, updateUserEmail, deleteUserProfile } from "../services/api";

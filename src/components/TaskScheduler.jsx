@@ -1,4 +1,3 @@
-// components/TaskScheduler.jsx
 import { useState, useEffect } from "react";
 import { fetchAllTasks, addTask, deleteTask } from "../services/api";
 

@@ -1,4 +1,3 @@
-//components/Signup.jsx
 import { useState } from "react";
 import { registerUser } from "../services/api";
 
