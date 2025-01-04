@@ -11,7 +11,7 @@ function Signup() {
     try {
       await registerUser(name, email, password); 
       alert("Signup successful! Redirecting to login...");
-      window.location.href = "/login"; // Redirect to login
+      navigate("/login"); // Redirect to login
     } catch (error) {
       setError(error.response?.data?.message || "Signup failed");
     }
