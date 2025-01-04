@@ -2,7 +2,8 @@ import axios from "axios";
 import { getToken, storeToken, removeToken} from "../utils/auth";
 
 // Base URL for your API
-const API_BASE_URL = "http://localhost:5000/api";
+// const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "https://mern-server-9nl3.onrender.com/api";
 
 // Function to get headers (for authenticated requests)
 const getHeaders = () => ({
