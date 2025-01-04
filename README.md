@@ -73,11 +73,11 @@
 
 ## Live Site
 
-[Click here to view the live site](#)().
+[Click here to view the live site](#)(https://mern-client-dmny.onrender.com/).
 
 ## Backend site
 
-[Click here to view the live site](#)(https://mern-server-9nl3.onrender.com/).
+[Click here for the Backend](#)(https://mern-server-9nl3.onrender.com/).
 
 ## git repo
 
