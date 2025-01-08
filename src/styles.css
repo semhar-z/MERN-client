@@ -21,25 +21,59 @@ body {
   }
 
   .home-page {
-    background-image: url('/images/image.jpeg');
+    position: relative;
+    background-image: url('/images/image3.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 0px;
-    margin: 0;
-    overflow: hidden;
-  }
+    align-items: flex-start;
   
-  .home-content {
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.8); 
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(117, 6, 6, 0.1); 
-  }
+   }
+
+   /* Top Centered Text */
+.centered-text {
+  position: absolute;
+  top: 20px; 
+  width: 100%;
+  text-align: center;
+  color: #4b0082; /* Purple text */
+}
+
+.welcome-text {
+  font-size: 2.0rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.explore-text {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+/* Quote Positioned in Clear Area */
+.quote-text {
+  position: absolute;
+  top: 50px; 
+  left: 30px; 
+  max-width: 300px; 
+  font-size: 1.2rem;
+  font-style: italic;
+  color:#2f4f4f; 
+  background-color: rgba(255, 255, 255, 0.7); /* Light background for readability */
+  padding: 10px 15px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+  
+  
+  
+  
+
+   
+ 
   
   
