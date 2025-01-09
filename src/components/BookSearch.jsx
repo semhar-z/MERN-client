@@ -1,66 +1,44 @@
 import { useState, useEffect } from "react";
-import { searchBooks, saveBook, fetchSavedBooks, deleteBook, checkBookAvailability } from "../services/api";
+import {
+  searchBooks,
+  saveBook,
+  fetchSavedBooks,
+  deleteBook,
+  checkBookAvailability,
+} from "../services/api";
 
 function BookSearch() {
-  const [query, setQuery] = useState(""); // Search query
-  const [books, setBooks] = useState([]); // Fetched books
-  const [savedBooks, setSavedBooks] = useState([]); // Saved books
-  const [currentPage, setCurrentPage] = useState(1); // Current page for pagination
-  const [totalPages, setTotalPages] = useState(1); // Total pages for pagination
-  const [loading, setLoading] = useState(false); // Loading state
+  const [query, setQuery] = useState("");
+  const [books, setBooks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [searchPerformed, setSearchPerformed] = useState(false); // Track if search is performed
 
-  // Fetch books from the API
   const fetchBooks = async (page = 1) => {
-    setLoading(true); // Set loading to true during the fetch process
+    setLoading(true);
     try {
-      const data = await searchBooks(query, page, 10); // Fetch books
-      setBooks(data.data); // Update books state
-      setTotalPages(data.totalPages); // Update total pages
+      const data = await searchBooks(query, page, 10);
+      setBooks(data.data);
+      setTotalPages(data.totalPages);
       setCurrentPage(page);
+      setSearchPerformed(true); // Mark search as performed
     } catch (error) {
       console.error("Error fetching books:", error.message);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  // Load saved books from the database
-  const loadSavedBooks = async () => {
-    try {
-      const data = await fetchSavedBooks(); // Fetch saved books
-      setSavedBooks(data); // Update saved books state
-    } catch (error) {
-      console.error("Error fetching saved books:", error.message);
-    }
-  };
-
-  useEffect(() => {
-    loadSavedBooks(); // Fetch saved books when the component mounts
-  }, []);
-
-  // Save a book to the database
   const handleSaveBook = async (book) => {
     try {
       await saveBook(book);
       alert(`Book "${book.title}" saved successfully!`);
-      loadSavedBooks(); // Reload saved books
     } catch (error) {
       console.error("Error saving book:", error.message);
     }
   };
 
-  // Delete a saved book from the database
-  const handleDeleteBook = async (isbn) => {
-    try {
-      await deleteBook(isbn);
-      alert("Book deleted successfully!");
-      loadSavedBooks(); // Reload saved books
-    } catch (error) {
-      console.error("Error deleting book:", error.message);
-    }
-  };
-
-  // Check availability in nearby libraries
   const handleCheckAvailability = async (isbn) => {
     try {
       const url = await checkBookAvailability(isbn);
@@ -70,21 +48,19 @@ function BookSearch() {
     }
   };
 
-  // Handle search query submission
   const handleSearch = () => {
     if (!query.trim()) {
       alert("Please enter a valid search query.");
       return;
     }
-    setCurrentPage(1); // Reset to the first page
-    fetchBooks(1); // Fetch books
+    setCurrentPage(1);
+    fetchBooks(1);
   };
 
   return (
     <div style={styles.container}>
-      <h2>Search for Books</h2>
+      <h2 style={styles.title}>Search for Books</h2>
 
-      {/* Search Input */}
       <div style={styles.searchContainer}>
         <input
           type="text"
@@ -93,24 +69,36 @@ function BookSearch() {
           onChange={(e) => setQuery(e.target.value)}
           style={styles.input}
         />
-        <button onClick={handleSearch} style={styles.button} disabled={loading}>
+        <button onClick={handleSearch} style={styles.searchButton} disabled={loading}>
           {loading ? "Searching..." : "Search"}
         </button>
       </div>
 
-      {/* Loading Indicator */}
       {loading && <p>Loading books, please wait...</p>}
 
-      {/* Books List */}
+      {searchPerformed && books.length === 0 && !loading && (
+        <p style={styles.noResults}>No books found. Please try a different search query.</p>
+      )}
+
       <div style={styles.bookList}>
         {books.map((book) => (
           <div key={book.isbn} style={styles.bookItem}>
             <h3>{book.title}</h3>
-            <p><strong>Author:</strong> {book.author}</p>
-            <p><strong>Published Year:</strong> {book.publish_year}</p>
-            <p><strong>Description:</strong> {book.description}</p>
-            {book.cover && <img src={book.cover} alt={book.title} style={styles.bookImage} />}
-            <button onClick={() => handleSaveBook(book)} style={styles.button}>Save</button>
+            <p>
+              <strong>Author:</strong> {book.author}
+            </p>
+            <p>
+              <strong>Published Year:</strong> {book.publish_year}
+            </p>
+            <p>
+              <strong>Description:</strong> {book.description}
+            </p>
+            {book.cover && (
+              <img src={book.cover} alt={book.title} style={styles.bookImage} />
+            )}
+            <button onClick={() => handleSaveBook(book)} style={styles.button}>
+              Save
+            </button>
             <button onClick={() => handleCheckAvailability(book.isbn)} style={styles.button}>
               Find in Library
             </button>
@@ -118,51 +106,27 @@ function BookSearch() {
         ))}
       </div>
 
-      {/* Pagination */}
-      <div style={styles.pagination}>
-        <button
-          onClick={() => {
-            if (currentPage > 1) {
-            fetchBooks(currentPage - 1)
-          }
-        }}
-          disabled={currentPage === 1 || loading}
-          style={styles.button}
-        >
-          Previous
-        </button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <button
-          onClick={() => {
-            if (currentPage < totalPages) {
-              fetchBooks(currentPage + 1);
-            }
-          }}
-          disabled={currentPage === totalPages || loading}
-          style={styles.button}
-        >
-          Next
-        </button>
-      </div>
-
-      {/* Saved Books Section */}
-      <div style={styles.savedBooksContainer}>
-        <h2>Saved Books</h2>
-        <div style={styles.savedBooksList}>
-          {savedBooks.map((book) => (
-            <div key={book.isbn} style={styles.savedBookItem}>
-              <h3>{book.title}</h3>
-              <p>Author: {book.author}</p>
-              <p>Published Year: {book.publish_year}</p>
-              {book.cover && <img src={book.cover} alt={book.title} style={styles.bookImage} />}
-              <button onClick={() => handleDeleteBook(book.isbn)} style={styles.button}>Delete</button>
-              <button onClick={() => handleCheckAvailability(book.isbn)} style={styles.button}>
-                Find in Library
-              </button>
-            </div>
-          ))}
+      {books.length > 0 && (
+        <div style={styles.pagination}>
+          <button
+            onClick={() => currentPage > 1 && fetchBooks(currentPage - 1)}
+            disabled={currentPage === 1 || loading}
+            style={styles.paginationButton}
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => currentPage < totalPages && fetchBooks(currentPage + 1)}
+            disabled={currentPage === totalPages || loading}
+            style={styles.paginationButton}
+          >
+            Next
+          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -173,33 +137,43 @@ const styles = {
     padding: "20px",
     textAlign: "center",
   },
+  title: {
+    fontSize: "28px",
+    marginBottom: "20px",
+    color: "#4b0082",
+    fontWeight: "bold",
+  },
   searchContainer: {
     display: "flex",
     justifyContent: "center",
+    alignItems: "center",
     gap: "10px",
-    marginBottom: "20px",
+    marginBottom: "30px",
   },
   input: {
-    padding: "10px",
-    width: "300px",
-    borderRadius: "4px",
+    padding: "12px",
+    width: "350px",
+    borderRadius: "30px",
     border: "1px solid #ccc",
+    fontSize: "16px",
+    outline: "none",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   },
-  button: {
-    padding: "10px",
-    backgroundColor: "#7b1fa2",
+  searchButton: {
+    padding: "12px 25px",
+    backgroundColor: "#4b0082",
     color: "white",
     border: "none",
+    borderRadius: "30px",
     cursor: "pointer",
-    borderRadius: "4px",
-    margin: "5px",
+    fontSize: "16px",
+    fontWeight: "bold",
+    transition: "background-color 0.3s ease",
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   },
   bookList: {
-    // display: "flex",
-    // flexWrap: "wrap",
     display: "grid",
-    gridTemplateColumns: "repeat(5, 1fr)", // 5 books per row
-    // justifyContent: "center",
+    gridTemplateColumns: "repeat(4, 1fr)",
     gap: "20px",
     maxWidth: "1200px",
     margin: "0 auto",
@@ -209,35 +183,45 @@ const styles = {
     border: "1px solid #ccc",
     borderRadius: "8px",
     textAlign: "center",
-    width: "200px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#fff",
   },
   bookImage: {
     width: "100%",
     height: "auto",
     marginBottom: "10px",
   },
+  button: {
+    padding: "10px",
+    backgroundColor: "#4b0082",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+    borderRadius: "4px",
+    margin: "5px",
+  },
   pagination: {
     marginTop: "20px",
-  },
-  savedBooksContainer: {
-    marginTop: "30px",
-  },
-  savedBooksList: {
     display: "flex",
-    flexWrap: "wrap",
     justifyContent: "center",
-    gap: "20px",
+    alignItems: "center",
+    gap: "10px",
   },
-  savedBookItem: {
-    padding: "15px",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
+  paginationButton: {
+    padding: "10px",
+    backgroundColor: "#7b1fa2",
+    color: "white",
+    border: "none",
+    cursor: "pointer",
+    borderRadius: "4px",
+    margin: "5px",
+  },
+  noResults: {
+    fontSize: "18px",
+    color: "#666",
     textAlign: "center",
-    width: "200px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    marginTop: "20px",
   },
 };
 
 export default BookSearch;
-

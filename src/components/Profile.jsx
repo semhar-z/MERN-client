@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile, updateUserEmail, deleteUserProfile } from "../services/api";
+import "./LoginSignup.css";
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -16,7 +17,7 @@ function Profile() {
         setEmail(data.email);
       } catch (error) {
         alert("You are not authenticated!");
-        navigate("/login"); // Redirect to login on failure
+        navigate("/login");
       } finally {
         setLoading(false);
       }
@@ -43,81 +44,52 @@ function Profile() {
     try {
       await deleteUserProfile();
       alert("Profile deleted successfully!");
-      navigate("/signup"); // Redirect to signup
+      navigate("/signup");
     } catch (error) {
       alert("Failed to delete profile.");
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="text-center mt-5">Loading...</div>;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.profile}>
-        <h2>Welcome, {userData?.name}</h2>
-        <p>Current Email: {userData?.email}</p>
+    <div className="profile-container d-flex justify-content-center align-items-center">
+      <div className="card shadow-lg p-4 text-center profile-card">
+        <div className="card-body">
+          <h2 className="card-title text-primary mb-4">Welcome, {userData?.name}</h2>
+          <p className="text-muted mb-4">
+            <strong>Current Email:</strong> {userData?.email}
+          </p>
 
-        {/* Update Email Form */}
-        <div>
-          <h3>Update Email</h3>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter new email"
-            style={styles.input}
-          />
-          <button onClick={handleUpdateEmail} style={styles.button}>
-            Update Email
-          </button>
-        </div>
+          {/* Update Email Section */}
+          <div className="mb-4">
+            <h5 className="text-secondary mb-3">Update Email</h5>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter new email"
+              className="form-control mb-3"
+            />
+            <button onClick={handleUpdateEmail} className="btn btn-primary w-100">
+              Update Email
+            </button>
+          </div>
 
-        {/* Delete Profile */}
-        <div>
-          <h3>Delete Profile</h3>
-          <button onClick={handleDeleteProfile} style={{ ...styles.button, backgroundColor: "red" }}>
-            Delete Profile
-          </button>
+          {/* Delete Profile Section */}
+          <div className="mb-4">
+            <h5 className="text-danger mb-3">Delete Profile</h5>
+            <button
+              onClick={handleDeleteProfile}
+              className="btn btn-danger w-100"
+            >
+              Delete Profile
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-const styles = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    backgroundColor: "#f5f5f5",
-  },
-  profile: {
-    backgroundColor: "white",
-    padding: "30px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    textAlign: "center",
-    maxWidth: "400px",
-  },
-  input: {
-    marginBottom: "15px",
-    padding: "10px",
-    width: "100%",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-  },
-  button: {
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "4px",
-    backgroundColor: "#4b0082",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "16px",
-  },
-};
-
 export default Profile;
-
-

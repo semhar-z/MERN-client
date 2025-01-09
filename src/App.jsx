@@ -71,7 +71,8 @@ function App() {
                     />
 
                     {/* Other routes */}
-                    <Route path="/saved-books" element={<SavedBooks />} />
+                    <Route path="/savedbooks" element={<SavedBooks />} />
+
                     <Route path="/tasks"
                            element={isAuthenticated ? <TaskScheduler /> : <Navigate to="/login" />
 

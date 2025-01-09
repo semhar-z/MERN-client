@@ -14,7 +14,7 @@ const NavBar = ({ isAuthenticated, setIsAuthenticated }) => {
     const handleLogout = () => {
         removeToken(); // Clear the token
         setIsAuthenticated(false); // Update authentication state
-        navigate('/login'); // Redirect to Login
+        navigate('/'); // Redirect to home page
     };
 
     return (
@@ -40,11 +40,19 @@ const NavBar = ({ isAuthenticated, setIsAuthenticated }) => {
                                 Tasks
                             </button>
                         </li>
-                        
-                        {/* Logout Button */}
-                        <li style={navItemStyles}>
+                                                             
+                        {/* { Saved Books} */}
+                        <li styel={navItemStyles}>
+                        <button onClick={() => navigate('/savedbooks')} style={linkStyles}>
+                             Saved Books
+                        </button>
+                        </li>
+
+                         {/* Logout Button */}
+                         <li style={navItemStyles}>
                             <button onClick={handleLogout} style={linkStyles}>Logout</button>
                         </li>
+
                     </>
                 ) : (
                     <>

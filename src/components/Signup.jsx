@@ -1,95 +1,73 @@
-import { useState } from "react";
-import { registerUser } from "../services/api";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { registerUser } from '../services/api';
+import { useNavigate } from 'react-router-dom';
+import "./LoginSignup.css";
 
 function Signup() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSignup = async () => {
+    if (!name || !email || !password) {
+      setError('All fields are required.');
+      return;
+    }
     try {
-      await registerUser(name, email, password); 
-      alert("Signup successful! Redirecting to login...");
-      navigate("/login"); // Redirect to login
+      await registerUser(name, email, password);
+      alert('Signup successful! Redirecting to login...');
+      navigate('/login');
     } catch (error) {
-      setError(error.response?.data?.message || "Signup failed");
+      setError(error.response?.data?.message || 'Signup failed');
     }
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.form}>
-        <h2>Signup</h2>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          style={styles.input}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={styles.input}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
-        />
-        <button onClick={handleSignup} style={styles.button}>
+    <div className="signup-container">
+      <div className="form-card">
+        <h2 className="form-title">Signup</h2>
+        {error && <div className="alert alert-danger">{error}</div>}
+        <div className="form-group mb-3">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            className="form-control"
+            placeholder="Enter your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="form-group mb-3">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            className="form-control"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="form-group mb-3">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            className="form-control"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button className="btn btn-primary w-100" onClick={handleSignup}>
           Signup
         </button>
-        {error && <p style={styles.error}>{error}</p>}
       </div>
     </div>
   );
 }
 
-const styles = {
-  container: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100vh",
-    backgroundColor: "#f5f5f5",
-  },
-  form: {
-    backgroundColor: "white",
-    padding: "30px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    textAlign: "center",
-    maxWidth: "400px",
-  },
-  input: {
-    marginBottom: "15px",
-    padding: "10px",
-    width: "100%",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-  },
-  button: {
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "4px",
-    backgroundColor: "#4b0082",
-    color: "white",
-    cursor: "pointer",
-    fontSize: "16px",
-  },
-  error: {
-    color: "red",
-    marginTop: "10px",
-  },
-};
-
 export default Signup;
-
